@@ -10,14 +10,6 @@ from itertools import combinations
 A = [[0 for i in range(256)] for j in range(8)]
 result=0
 
-def tobits(num, bit_len):
-    # tobinary string
-    res = ""
-    for pos in range(bit_len):
-        res = str(num % 2) + res
-        num //= 2
-    return res
-
 def State_Variate(fout, bitnum, Size, GateNum, QNum, bNum,yN,TTstr):
     #State Variate
     #x
@@ -303,7 +295,7 @@ if __name__ == '__main__':
                     x=1
                     xx=0
                     while (x):
-                        order = "stp -p " + str(filestr) + ".cvc  --cryptominisat --threads 1"  # > "+file+".txt "
+                        order = ""
                         #print(order)
                         start_time = time.time()
                         # print(i,start_time)
