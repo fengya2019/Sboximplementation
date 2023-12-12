@@ -8,15 +8,6 @@ result =0
 A = [[0 for i in range(256)] for i in range(8)]
 resstr = ""
 
-def tobits(num, bit_len):
-    # tobinary string
-    res = ""
-    for pos in range(bit_len):
-        res = str(num % 2) + res
-        num /= 2
-    return res
-
-
 def State_Variate(fout, bitnum, Size, GateNum, QNum, bNum):
     # State Variate
     for i in range(bitnum):
@@ -69,13 +60,6 @@ def Trival_Constraint(fout, bitnum, Size, GateNum, QNum, bNum, Sbox):
     Decompose(0, Sbox)
     for i in range(bitnum):
         fout.write("ASSERT( X_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write(str(A[i][j]))
-        fout.write(" );\n")
-    # Y
-    Decompose(1, Sbox)
-    for i in range(bitnum):
-        fout.write("ASSERT( Y_" + str(i) + " = 0bin")
         for j in range(Size):
             fout.write(str(A[i][j]))
         fout.write(" );\n")
@@ -169,7 +153,7 @@ def Objective(fout):
 
 def thread_func(threads, filestr,i):
     global result
-    order = "stp -p " + str(filestr) + ".cvc --cryptominisat --threads 1"# > " + filestr + ".txt "
+    order = ""
     # print(order)
     start_time = time.time()
     # print(i,start_time)
