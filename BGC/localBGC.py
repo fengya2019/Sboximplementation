@@ -38,49 +38,6 @@ def Objective(fout):
     fout.write("QUERY(FALSE);\nCOUNTEREXAMPLE;\n")
 
 
-def thread_func(t,filestr, strs):
-    global result
-    order = "stp -p " + str(filestr) + ".cvc --cryptominisat --threads 1"# > " + file + ".txt "
-    # print(order)
-    start_time = time.time()
-    # print(i,start_time)
-    s=(os.popen(order).read())
-    #os.system(order)
-    end_time = time.time()
-    # for t in threads:
-    #    if
-    # print(file,(end_time-start_time)*1000,'ms')
-
-    if "Invalid." in s:
-        result =strs
-        print(s,filestr, strs,(end_time-start_time)*1000,'ms')
-        fouts=open(filestr+"Y.txt",'a+')
-        fouts.write(str(s))
-        fouts.write(str((end_time - start_time)*1000))
-        fouts.close()
-    elif "Valid." in s:        
-        result =strs
-        print(s,filestr, strs,(end_time-start_time)*1000,'ms')
-        fouts=open(filestr+"N.txt",'a+')
-        fouts.write(str(s))
-        fouts.write(str((end_time - start_time)*1000))
-        fouts.close()
-def combination_impl(l, n, stack,length,SS):
-    if n == 0:
-        if len(stack)==length:
-            ss=[]
-            for i in range(len(stack)):
-                ss.append(stack[i])
-            #print(ss)
-            SS.append(ss)
-        return
-    for i in range(0, len(l)):
-        if l[i] <= n:
-            stack.append(l[i])
-            combination_impl(l, n - l[i], stack,length,SS)
-            stack.pop()
-        else:
-            break
 
 if __name__ == '__main__':
     n0=1 #part of S-box outputs
