@@ -8,138 +8,6 @@ A = [[0 for i in range(256)] for j in range(8)]
 
 
 resstr=""
-def tobits(num, bit_len):
-    # tobinary string
-    res = ""
-    for pos in range(bit_len):
-        res = str(num % 2) + res
-        num /= 2
-    return res
-
-def State_Variate(fout, aNum,bitnum, Size, GateNum, QNum, bNum):
-    # State Variate
-    #X
-    for i in range(bitnum):
-        fout.write('X_' + str(i))
-        if (i == bitnum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    #Y
-    for i in range(bitnum):
-        fout.write("Y_" + str(i))
-        if (i == bitnum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    #T
-    for t in range(GateNum):
-        fout.write("T_"+ str(t))
-        if (t == GateNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    #A
-    for i in range(aNum):
-        fout.write("A_" + str(i))
-        if (i == aNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    #Q
-    for i in range(QNum):
-        fout.write("Q_"+ str(i))
-        if (i == QNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    #B
-    for i in range(bNum):
-        fout.write("B_" + str(i))
-        if (i == bNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-
-
-def Decompose(flag,Sbox):
-    #get sbox's inputs and outputs
-    for i in range(Size):
-        tem = ""
-        if flag == 0:
-            tem = i
-        else:
-            tem = Sbox[i]
-        for j in range(bitnum - 1, -1, -1):
-            A[j][i] = tem % 2
-            tem //= 2
-
-
-def Trival_Constraint(fout, aNum,bitnum, Size, GateNum, QNum, bNum,Sbox):
-    # Trival Constraints
-    # X
-    Decompose(0,Sbox)
-    for i in range(bitnum):
-        fout.write("ASSERT( X_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write(str(A[i][j]))
-        fout.write(" );\n")
-    # Y
-    Decompose(1,Sbox)
-    for i in range(bitnum):
-        fout.write("ASSERT( Y_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write(str(A[i][j]))
-        fout.write(" );\n")
-    #A
-    for i in range(aNum):
-        fout.write("ASSERT( A_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write("1")
-        fout.write(" OR A_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write("0")
-        fout.write(" );\n")
-    # Q_A
-    a_Start = 0
-    a_counter = bitnum
-    for k in range(GateNum):
-        for q in range(2):
-            for i in range(a_Start, a_Start + a_counter - 1):
-                for j in range(i + 1,a_Start + a_counter):
-                    fout.write( "ASSERT( A_" + str(i) + " & A_" + str(j) + " = 0bin")
-                    for j0 in range(Size):
-                        fout.write("0")
-                    fout.write(" );\n")
-            a_Start += a_counter
-        a_counter+=1
-    # Y_A
-    for k in range(bitnum):
-        for i in range(a_Start, a_Start + a_counter - 1):
-            for j in range( i + 1, a_Start + a_counter):
-                fout.write( "ASSERT( A_" + str(i) + " & A_" + str(j)+ " = 0bin")
-                for j0 in range(Size):
-                    fout.write("0")
-                fout.write(" );\n")
-        a_Start += a_counter
-    #B
-    for i in range(bNum):
-        fout.write("ASSERT( B_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write("1")
-        fout.write(" OR B_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write("0")
-        fout.write(" );\n")
-    for i in range(0,bNum,3):
-        x0 = "0bin"
-        x1 = "0bin"
-        for j in range(Size):
-            x0 = x0 + "0"
-            x1 = x1 + "1"
-        fout.write("ASSERT( B_" + str(i) + " & B_" + str(i + 2) + " = " + x0 + "  );\n")
-        fout.write("ASSERT( B_" + str(i + 1) + " & B_" + str(i + 2) + " = " + x0 + "  );\n")
-
 def Logic_Constraint(fout, bitnum, Size, GateNum, QNum, bNum):
     countA = 0
     countB = 0
@@ -224,7 +92,7 @@ if __name__ == '__main__':
         Objective(fout)
         fout.close()
 
-        order="stp -p "+str(filestr)+".cvc --cryptominisat --threads 1"#> "+filestr+".txt " # command: cvc to cnf for cryptominisat
+        order="stp -p "+str(filestr)+".cvc "#> "+filestr+".txt " # command: cvc to cnf for cryptominisat
 
         start_time = time.time()
 
