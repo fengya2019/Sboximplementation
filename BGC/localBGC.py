@@ -117,70 +117,12 @@ if __name__ == '__main__':
                     tttstr=[]
                     x=1
                     xx=0
-                    while (x):
-                        order = "stp -p " + str(filestr) + ".cvc  --cryptominisat --threads 1"  # > "+file+".txt "
-                        #print(order)
-                        start_time = time.time()
-                        # print(i,start_time)
-                        # s=(os.popen(order))
-                        # os.system(order)
-                        s = (os.popen(order).read())
-                        resultstr = s
-                        print(s,filestr)
-                        if "Invalid." in s:
-                            issolver=1
-                            Astr = []
-                            AAstr = []
-                            Ystr = ""
-                            for line in resultstr.splitlines():
-                                s0 = line.split()
-                                if "Y_" in s0[1]:
-                                    Ystr = int(s0[3], 16)
-                                    break
-                            ttstr = []
-                            for line in resultstr.splitlines():
-                                s0 = line.split()
-                                isture = 0
-                                print(s0)
-                                if len(s0) > 2 and "T_" in s0[1] and int(s0[3], 16) != Ystr:
-                                    Astr.append("".join(s0))
-                                    ttstr.append(int(s0[3], 16))
-                                if len(s0) > 2 and "T_" in s0[1]:
-                                    AAstr.append("".join(s0))
-                            fstr = "./localbgc/"+Cipherstr+"/11/" + Cipherstr+str(GateNum)+strz +str(depth)
-                            foutc = open(fstr + ".txt", 'a+')
-                            foutc.write(s)
-                            foutc.close()
-                            if len(Astr) > 0:
-                                ttstr.sort()
-                                if ttstr not in tttstr:
-                                    filestr1 = "./localbgc/"+Cipherstr+"/11/" + str(GateNum)+strz  +str(depth)
-                                    fout1 = open(filestr1 + ".txt", 'a+')
-                                    fout1.write("\n".join(AAstr) + "\n\n")
-                                    fout1.close()
-                                    tttstr.append(ttstr)
-                                f = open(filestr + ".cvc", 'r')
-                                lines = []
-                                b1str = "ASSERT("
-                                for i0 in range(len(Astr)):
-                                    b1str = b1str + " (NOT" + ((Astr[i0].replace("ASSERT", "")).replace(";", "")) + ") "
-                                    if i0 == len(Astr) - 1:
-                                        b1str = b1str + ");\n"
-                                    else:
-                                        b1str = b1str + "AND"
-                                # print(b1str)
-                                for line in f:
-                                    lines.append(line)
-                                lines.insert(4 + 2 * bitnum + GateNum, b1str)
-                                s = ''.join(lines)
-                                f.close()
-                                f = open(filestr + ".cvc", 'w')
-                                f.write(s)
-                                f.close()
-                        else:
-                            filestr = "./localbgc/"+Cipherstr+"/11/"+Cipherstr+"LocalBGC"+str(GateNum)+strz #encoding modle to file
-                            os.system("rm -f "+ filestr+".cvc")
-                            x=0
-                            xx=1
-                if issolver:
-                    break
+                    order = "stp -p " + str(filestr) + ".cvc "  # > "+file+".txt "
+                    #print(order)
+                    start_time = time.time()
+                    # print(i,start_time)
+                    # s=(os.popen(order))
+                    # os.system(order)
+                    s = (os.popen(order).read())
+                    resultstr = s
+                    print(s,filestr)
