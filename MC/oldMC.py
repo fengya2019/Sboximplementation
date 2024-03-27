@@ -7,96 +7,6 @@ import ctypes
 A = [[0 for i in range(256)] for j in range(8)]
 
 resstr = ""
-
-
-def tobits(num, bit_len):
-    # tobinary string
-    res = ""
-    for pos in range(bit_len):
-        res = str(num % 2) + res
-        num /= 2
-    return res
-
-
-def State_Variate(fout, aNum, bitnum, Size, GateNum, QNum):
-    # State Variate
-    # X
-    for i in range(bitnum):
-        fout.write('X_' + str(i))
-        if (i == bitnum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    # Y
-    for i in range(bitnum):
-        fout.write("Y_" + str(i))
-        if (i == bitnum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    # T
-    for t in range(GateNum):
-        fout.write("T_" + str(t))
-        if (t == GateNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    # A
-    for i in range(aNum):
-        fout.write("A_" + str(i))
-        if (i == aNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-    # Q
-    for i in range(QNum):
-        fout.write("Q_" + str(i))
-        if (i == QNum - 1):
-            fout.write(" : BITVECTOR( " + str(Size) + " );\n")
-        else:
-            fout.write(" , ")
-
-
-def Decompose(flag, Sbox):
-    # get sbox's inputs and outputs
-    for i in range(Size):
-        tem = ""
-        if flag == 0:
-            tem = i
-        else:
-            tem = Sbox[i]
-        for j in range(bitnum - 1, -1, -1):
-            A[j][i] = tem % 2
-            tem //= 2
-
-
-def Trival_Constraint(fout, aNum, bitnum, Size, Sbox):
-    # Trival Constraints
-    # X
-    Decompose(0, Sbox)
-    for i in range(bitnum):
-        fout.write("ASSERT( X_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write(str(A[i][j]))
-        fout.write(" );\n")
-    # Y
-    Decompose(1, Sbox)
-    for i in range(bitnum):
-        fout.write("ASSERT( Y_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write(str(A[i][j]))
-        fout.write(" );\n")
-    # A
-    for i in range(aNum):
-        fout.write("ASSERT( A_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write("1")
-        fout.write(" OR A_" + str(i) + " = 0bin")
-        for j in range(Size):
-            fout.write("0")
-        fout.write(" );\n")
-
-
 def Logic_Constraint(fout, bitnum, GateNum):
     countA = 0
     countQ = 0
@@ -182,7 +92,7 @@ if __name__ == '__main__':
         Objective(fout)
         fout.close()
 
-        order = "stp -p " + str(filestr) + ".cvc --cryptominisat --threads 1 "
+        order = "stp -p " + str(filestr) + ".cvc "
         start_time = time.time()
 
         #os.system(order)  # Execute the command to solve
